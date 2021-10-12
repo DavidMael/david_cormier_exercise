@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quoting Interface</title>
+
+    <script type="text/javascript" >
+        function requestQuote() {
+            var pickupVal = document.getElementById("pickup_postcode").value;
+            var deliveryVal = document.getElementById("delivery_postcode").value;
+            var vehicleVal = document.getElementById("vehicle").value;
+            console.log(pickupVal);
+            console.log(deliveryVal);
+            console.log(vehicleVal);
+
+            var quoteUrl = 'http://localhost:8080/quote';
+            fetch(quoteUrl, {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pickupPostcode: pickupVal,
+                deliveryPostcode: deliveryVal,
+                vehicle: vehicleVal
+              })
+            }).then(response => {
+              return response.json();
+            }).then(data => {
+              console.log(data);
+            }).catch(err => {
+            });
+        }
+    </script>
+
+</head>
+<body>
+    <div>
+
+        <form id="form" onsubmit="requestQuote()">
+            <label for="pickup_postcode">Pickup postcode: </label>
+            <input type="text" id="pickup_postcode" value="SW1A1AA"/><br><br>
+            <label for="delivery_postcode">Delivery postcode: </label>
+            <input type="text" id="delivery_postcode" value="EC2A3LT" /><br><br>
+            <label for="vehicle">Vehicle: </label>
+            <input type="text" id="vehicle" value="bicycle" /><br><br>
+        </form><br><br>
+
+        <input type = "button" onclick = "requestQuote()" value = "Submit for quoting"><br><br>
+
+
+    </div>
+</body>
+</html>
