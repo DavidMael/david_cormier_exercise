@@ -38,6 +38,7 @@ public class QuoteController {
                 break;
             default:
                 markup = 1;
+                vehicle = "vehicle_not_recognized";
                 break;
         }
         Long price = Long.valueOf(Math.round(rawPrice*markup));
