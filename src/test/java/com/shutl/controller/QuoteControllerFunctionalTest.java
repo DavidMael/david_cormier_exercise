@@ -52,6 +52,22 @@ public class QuoteControllerFunctionalTest {
     }
 
     @Test
+    public void testBasicServiceNoVehicle() throws Exception {
+        Quote quoteData = new Quote("SW1A1AA", "EC2A3LT");
+        MvcResult result = this.mockMvc.perform(post("/quote")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(quoteData)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Quote quote = objectMapper.readValue(result.getResponse().getContentAsString(), Quote.class);
+        assertEquals(quote.getPickupPostcode(), "SW1A1AA");
+        assertEquals(quote.getDeliveryPostcode(), "EC2A3LT");
+        assertEquals(quote.getVehicle(), "no_vehicle");
+        assertEquals(quote.getPrice(), new Long(316));
+    }
+
+    @Test
     public void testVariablePricingByDistance() throws Exception {
         Quote quoteData = new Quote("SW1A1AA", "EC2A3LT", "bicycle");
         MvcResult result = this.mockMvc.perform(post("/quote")
@@ -108,14 +124,14 @@ public class QuoteControllerFunctionalTest {
         assertEquals(quote.getVehicle(), "motorbike");
         assertEquals(quote.getPrice(), new Long(363));
 
-        Quote quoteData = new Quote("SW1A1AA", "EC2A3LT", "parcel_car");
-        MvcResult result = this.mockMvc.perform(post("/quote")
+        quoteData = new Quote("SW1A1AA", "EC2A3LT", "parcel_car");
+        result = this.mockMvc.perform(post("/quote")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(quoteData)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Quote quote = objectMapper.readValue(result.getResponse().getContentAsString(), Quote.class);
+        quote = objectMapper.readValue(result.getResponse().getContentAsString(), Quote.class);
         assertEquals(quote.getPickupPostcode(), "SW1A1AA");
         assertEquals(quote.getDeliveryPostcode(), "EC2A3LT");
         assertEquals(quote.getVehicle(), "parcel_car");
@@ -147,4 +163,6 @@ public class QuoteControllerFunctionalTest {
         assertEquals(quote.getVehicle(), "large_van");
         assertEquals(quote.getPrice(), new Long(442));
     }
+
+
 }
