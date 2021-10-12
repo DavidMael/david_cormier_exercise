@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Quoting Interface</title>
+    <link rel="stylesheet" href="QuoteInterface.css">
 
     <script type="text/javascript" >
         function requestQuote() {
@@ -13,6 +14,8 @@
             console.log(pickupVal);
             console.log(deliveryVal);
             console.log(vehicleVal);
+
+            document.getElementById("quoteText").innerHTML = "Awaiting quote from server";
 
             var quoteUrl = 'http://localhost:8080/quote';
             fetch(quoteUrl, {
@@ -28,8 +31,9 @@
               })
             }).then(response => {
               return response.json();
-            }).then(data => {
-              console.log(data);
+            }).then(quote => {
+              var phrase = `A delivery from ${quote.pickupPostcode} to ${quote.deliveryPostcode} using a ${quote.vehicle} will cost you £${quote.price}.`;
+              document.getElementById("quoteText").innerHTML = phrase;
             }).catch(err => {
             });
         }
@@ -39,17 +43,30 @@
 <body>
     <div>
 
-        <form id="form" onsubmit="requestQuote()">
+        <center>
+            <h1>
+                Quoting Interface
+            </h1>
+        </center>
+
+        <center>
+            <form id="form" onsubmit="requestQuote()">
             <label for="pickup_postcode">Pickup postcode: </label>
             <input type="text" id="pickup_postcode" value="SW1A1AA"/><br><br>
             <label for="delivery_postcode">Delivery postcode: </label>
             <input type="text" id="delivery_postcode" value="EC2A3LT" /><br><br>
             <label for="vehicle">Vehicle: </label>
-            <input type="text" id="vehicle" value="bicycle" /><br><br>
-        </form><br><br>
+            <input type="text" id="vehicle" value="bicycle" />
+        </form>
+            <br><br></center>
 
-        <input type = "button" onclick = "requestQuote()" value = "Submit for quoting"><br><br>
+            <center>
+                <input type = "button" onclick = "requestQuote()" value = "Submit for quoting">
+                <br><br></center>
 
+                <center>
+                    <br><br><span id="quoteText"></span>
+                </center>
 
     </div>
 </body>
